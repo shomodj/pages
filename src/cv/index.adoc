@@ -1,0 +1,82 @@
+
+= Boris Somodvarac
+
+== Summary
+
+* Working with Gnu/*/Linux since 2001 (Debian Potato), 20 years ago
+* Programming with dynamic languages since (Python 2.0), 20 years ago
+* Automation zealot
+** Configuration management ~8 years, experience in SaltStack, Ansible, Chef
+** Cloud infrastructure ~4 years, experience in AWS/Terraform/Pulumi
+* Not afraid to work with binary protocols or JavaScript :)
+* Passionate about Open Source and Self-Hosting
+
+== Work history
+
+=== Workday
+
+* From February 2016 until December 2021, 5 years and 11 months
+* Title: DevOps Tech Lead
+
+.Projects
+* Upgraded 60 powerful build server from bash to Chef
+* Custom VMWare automation, frontend and backend service
+* Created cookbooks to configure Artifactory in production Data centers
+* Upgraded Kubernetes from 1.5 to 1.7
+* Designed and implemented scalable framework for hosting Artifactory in AWS
+** Running in 10 data centers
+* Designed and implemented platform for hosting DevTools services using Nomad,Consul and Vault on AWs
+
+
+=== FullTilt, Rational Group
+
+* From March 2014 until January 2016, 1 year and 11 months
+* Title: DevOps Engineer
+
+.Projects
+* Converted all build machines to SaltStack, Windows/Linux and Mac
+* Upgraded database servers
+* Full stack developer for custom built CI/CD/Release management system
+
+
+=== ZoomMediaPlus
+
+* Worked from December 2012 until March 2014, 1 year and 4 months
+* Title: Python Developer
+
+.Projects
+* Car insurance backend service to analyze new drives behaviur
+* Wrote a Diameter server for the use of MVNO
+
+
+=== Oglasnik
+
+* Worked from March 2010 until November 2012, 2 years and 9 months
+* Title: Perl Developer
+
+.Projects
+* Maintaining oglasnik.hr
+* Worked on migration to new platform
+
+
+=== Pattern Matched Technologies
+
+* Worked from February 2009 until March 2011, 2 years and 2 months
+* Title: Erlang Developer
+
+.Projects
+* Wrote ISO8583 Issues, Switch and Acquirer
+** MasterCard accredited
+** FistData Connect accredited
+
+
+=== Iskon Internet
+
+* Worked from September 2005 until February 2017, 1 year and 6 months
+* Title: Perl Developer
+
+.Projects
+* Maintaned Radius/Radiator servers
+* Wrote DHCP server
+* ISP/Hosting automations and integrations
+

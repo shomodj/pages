@@ -1,0 +1,12 @@
+version: "3"
+
+tasks:
+  cv:
+    desc: build cv html
+    cmds:
+      - asciidoctor src/cv/index.adoc
+
+  cv-pdf:
+    desc: build cv pdf
+    cmds:
+      - asciidoctor-pdf src/cv/index.adoc
