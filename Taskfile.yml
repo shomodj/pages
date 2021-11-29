@@ -4,9 +4,13 @@ tasks:
   cv:
     desc: build cv html
     cmds:
+      - mkdir -p build/cv
       - asciidoctor src/cv/index.adoc
+      - mv src/cv/index.html build/cv/index.html
 
   cv-pdf:
     desc: build cv pdf
     cmds:
+      - mkdir -p build/cv
       - asciidoctor-pdf src/cv/index.adoc
+      - mv src/cv/index.pdf build/cv/boris-somodvarac.pdf
