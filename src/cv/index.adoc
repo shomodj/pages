@@ -12,7 +12,7 @@
 
 == Work history
 
-=== Workday
+=== Workday, Ireland
 
 * From February 2016 until December 2021, 5 years and 11 months
 * Title: DevOps Tech Lead
@@ -27,7 +27,7 @@
 * Designed and implemented platform for hosting DevTools services using Nomad,Consul and Vault on AWS
 
 
-=== FullTilt, Rational Group
+=== FullTilt, Rational Group, Ireland
 
 * From March 2014 until January 2016, 1 year and 11 months
 * Title: DevOps Engineer
@@ -38,7 +38,7 @@
 * Full stack developer for custom-built CI/CD/Release management system
 
 
-=== ZoomMediaPlus
+=== ZoomMediaPlus, Croatia
 
 * Worked from December 2012 until March 2014, 1 year and 4 months
 * Title: Python Developer
@@ -48,7 +48,7 @@
 * Wrote a Diameter server for the use of MVNO (virtual mobile operator)
 
 
-=== Oglasnik
+=== Plavi Oglasnik, Croatia
 
 * Worked from March 2010 until November 2012, 2 years and 9 months
 * Title: Perl Developer
@@ -58,7 +58,7 @@
 * Worked on migration to new platform
 
 
-=== Pattern Matched Technologies
+=== Pattern Matched Technologies, South Africa
 
 * Worked from February 2009 until March 2011, 2 years and 2 months
 * Title: Erlang Developer
@@ -69,9 +69,18 @@
 ** FistData Connect accredited
 
 
-=== Iskon Internet
+=== ZoomMediaPlus, Croatia
 
-* Worked from September 2005 until February 2017, 1 year and 6 months
+* Worked from March 2007 until January 2009, 1 year and 10 months
+* Title: Perl Developer
+
+.Projects
+* Worked for Qualcomm USA on designing and implementing new device testing framework in Perl
+* Worked on testing new mobile device that should have had video streaming
+
+=== Iskon Internet, Croatia
+
+* Worked from September 2005 until February 2007, 1 year and 6 months
 * Title: Perl Developer
 
 .Projects
