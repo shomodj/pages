@@ -4,11 +4,10 @@
 == Summary
 
 * Working with Gnu/*/Linux since 2001 (Debian Potato), 20 years ago
-* Programming with dynamic languages since (Python 2.0), 20 years ago
+* Programming using dynamic languages since (Python 2.0), 20 years ago
 * Automation zealot
 ** Configuration management ~8 years, experience in SaltStack, Ansible, Chef
 ** Cloud infrastructure ~4 years, experience in AWS/Terraform/Pulumi
-* Not afraid to work with binary protocols or JavaScript :)
 * Passionate about Open Source and Self-Hosting
 
 == Work history
@@ -20,12 +19,12 @@
 
 .Projects
 * Upgraded 60 powerful build server from bash to Chef
-* Custom VMWare automation, frontend and backend service
-* Created cookbooks to configure Artifactory in production Data centers
+* Custom VMWare automation service, frontend and backend
+* Created cookbooks to configure Artifactory in production data centers
 * Upgraded Kubernetes from 1.5 to 1.7
 * Designed and implemented scalable framework for hosting Artifactory in AWS
 ** Running in 10 data centers
-* Designed and implemented platform for hosting DevTools services using Nomad,Consul and Vault on AWs
+* Designed and implemented platform for hosting DevTools services using Nomad,Consul and Vault on AWS
 
 
 === FullTilt, Rational Group
@@ -36,7 +35,7 @@
 .Projects
 * Converted all build machines to SaltStack, Windows/Linux and Mac
 * Upgraded database servers
-* Full stack developer for custom built CI/CD/Release management system
+* Full stack developer for custom-built CI/CD/Release management system
 
 
 === ZoomMediaPlus
@@ -45,8 +44,8 @@
 * Title: Python Developer
 
 .Projects
-* Car insurance backend service to analyze new drives behaviur
-* Wrote a Diameter server for the use of MVNO
+* Backend service to analyze new car drives behaviour based on the GPS tracking for car instance companies
+* Wrote a Diameter server for the use of MVNO (virtual mobile operator)
 
 
 === Oglasnik
@@ -55,7 +54,7 @@
 * Title: Perl Developer
 
 .Projects
-* Maintaining oglasnik.hr
+* Maintaining and developing new features for oglasnik.hr
 * Worked on migration to new platform
 
 
@@ -65,7 +64,7 @@
 * Title: Erlang Developer
 
 .Projects
-* Wrote ISO8583 Issues, Switch and Acquirer
+* Wrote ISO8583 Issues, Switch and Acquirer (client, server and currencies exchange)
 ** MasterCard accredited
 ** FistData Connect accredited
 
@@ -76,7 +75,6 @@
 * Title: Perl Developer
 
 .Projects
-* Maintaned Radius/Radiator servers
-* Wrote DHCP server
+* Maintained Radius/Radiator servers
+* Wrote a custom DHCP server
 * ISP/Hosting automations and integrations
-
