@@ -1,0 +1,65 @@
+
+= Terraform
+
+== DSL in DSL
+
+* https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html
+* https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl
+* https://en.wikipedia.org/wiki/Ephemeral_port
+* https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-byoip.html
+* https://docs.gruntwork.io/guides/upgrading-to-tf12-tg19/
+
+NOTE: these ideas were initially written to solve problems with terraform version 0.11 which uses HCL1 syntaxt, newer versions of terraform use HCL2 which has much more powerfull syntaxt but the problem is the same
+
+[source, hcl]
+----
+resource "aws_network_acl" "bastion-100" {
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "BYOIP"
+    from_port  = 22
+    to_port    = 222
+  }
+
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "BYOIP"
+    from_port  = 32768
+    to_port    = 60999
+  }
+
+}
+
+resource "aws_network_acl" "bastion-200" {
+  vpc_id = aws_vpc.main.id
+
+  egress {
+    protocol   = "tcp"
+    rule_no    = 200
+    action     = "allow"
+    cidr_block = "SUBNET"
+    from_port  = 22
+    to_port    = 22
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 200
+    action     = "allow"
+    cidr_block = "SUBNET"
+    from_port  = 32768
+    to_port    = 60999
+  }
+}
+
+----
+
+== Jinja
+
+== JSON
