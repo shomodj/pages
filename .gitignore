@@ -3,3 +3,5 @@
 
 *.html
 *.pdf
+.terraform*
+terraform.tfstate*

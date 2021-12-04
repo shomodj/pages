@@ -14,3 +14,10 @@ tasks:
       - mkdir -p build/cv
       - asciidoctor-pdf src/cv/index.adoc
       - mv src/cv/index.pdf build/cv/boris-somodvarac.pdf
+
+  blog:
+    desc: build blog
+    cmds:
+      - asciidoctor src/blog/**/*.index.adoc 
+
+  

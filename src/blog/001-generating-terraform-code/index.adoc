@@ -1,0 +1,105 @@
+
+= Generating terraform code
+
+== DSL in DSL
+
+* https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html
+* https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl
+* https://en.wikipedia.org/wiki/Ephemeral_port
+* https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-byoip.html
+* https://docs.gruntwork.io/guides/upgrading-to-tf12-tg19/
+
+NOTE: these ideas were initially written to solve problems with terraform version 0.11 which uses HCL1 syntaxt, newer versions of terraform use HCL2 which has much more powerfull syntaxt but the problem is the same
+
+Major problem here is the removing one line in the list will trigger delete and create on all the elements below that element.
+
+Lets run `terraform apply`, showing only two rules from ingress and egress
+
+----
+ # aws_network_acl_rule.bastion_in[0] will be created
+  + resource "aws_network_acl_rule" "bastion_in" {
+      + cidr_block     = "188.252.196.255/32"
+      + egress         = false
+      + from_port      = 22
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "tcp"
+      + rule_action    = "allow"
+      + rule_number    = 101
+      + to_port        = 22
+    }
+
+  # aws_network_acl_rule.bastion_in[1] will be created
+  + resource "aws_network_acl_rule" "bastion_in" {
+      + cidr_block     = "172.31.16.0/20"
+      + egress         = false
+      + from_port      = 1024
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "tcp"
+      + rule_action    = "allow"
+      + rule_number    = 102
+      + to_port        = 65535
+    }
+
+  # aws_network_acl_rule.bastion_out[0] will be created
+  + resource "aws_network_acl_rule" "bastion_out" {
+      + cidr_block     = "188.252.196.255/32"
+      + egress         = true
+      + from_port      = 1024
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "tcp"
+      + rule_action    = "allow"
+      + rule_number    = 101
+      + to_port        = 65535
+    }
+
+  # aws_network_acl_rule.bastion_out[1] will be created
+  + resource "aws_network_acl_rule" "bastion_out" {
+      + cidr_block     = "172.31.16.0/20"
+      + egress         = true
+      + from_port      = 22
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "tcp"
+      + rule_action    = "allow"
+      + rule_number    = 102
+      + to_port        = 22
+    }
+----
+
+So we generated `aws_network_acl_rule` resources from this:
+
+----
+"from ${local.public_ip} to any port 22 proto tcp",
+"from ${local.subnet_a}  to any port 1024:65535 proto tcp",
+----
+
+The concept is nice, but code is not. Granted this was written for 0.11 version, it is probally little bit cleaner in 0.12+ versions but the same fundamental problem still persists and that is that `count` is evil. Why? Because removing one UFW rule in the middle of the list will trigger a delete/create on the rest of the list.
+
+== Jinja
+
+This is where a "proper" templating comes in :) 
+
+My next idea was to use json/yaml inventory file and fead it to jinja templates to generate terraform code. So instead of using count I would generate seperate unique resources.
+
+[source, hcl]
+----
+aws_network_acl_rule "bastion_in" {
+    count = ...
+}
+----
+
+[source, jinja]
+----
+{% for rule in inventory.bastion_in %}
+
+aws_network_acl_rule "bastion_in-{{  }}" {
+    count = ...
+}
+
+{% endfor %}
+----
+
+== JSON
