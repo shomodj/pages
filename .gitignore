@@ -1,7 +1,4 @@
-/.idea
-/build
+/.task
 
-*.html
-*.pdf
 .terraform*
 terraform.tfstate*

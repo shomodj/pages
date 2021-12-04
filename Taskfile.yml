@@ -1,23 +1,21 @@
 version: "3"
 
 tasks:
-  cv:
-    desc: build cv html
+  html:
+    desc: build html
     cmds:
-      - mkdir -p build/cv
-      - asciidoctor src/cv/index.adoc
-      - mv src/cv/index.html build/cv/index.html
+      - find ./ -name '*.adoc' -exec asciidoctor {} +
 
   cv-pdf:
     desc: build cv pdf
     cmds:
-      - mkdir -p build/cv
-      - asciidoctor-pdf src/cv/index.adoc
-      - mv src/cv/index.pdf build/cv/boris-somodvarac.pdf
+      - asciidoctor-pdf cv/index.adoc
+      - mv cv/index.pdf cv/boris-somodvarac.pdf
 
-  blog:
-    desc: build blog
+  lfs:
+    desc: install git lfs
     cmds:
-      - asciidoctor src/blog/**/*.index.adoc 
-
-  
+    - yay -S git-lfs
+    - git lfs install
+    - git lfs track "*.pdf"
+    - git add .gitattribute
