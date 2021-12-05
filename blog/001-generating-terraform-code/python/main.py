@@ -12,20 +12,37 @@ import xxhash
 def get_inventory() -> Dict[str, Any]:
   cmd = subprocess.run(["cue", "export", "inventory.cue"], capture_output=True, check=True)
   data = cmd.stdout.decode("utf-8")
+
   return json.loads(data)
 
 
 def parse_nacl_rule(rule: str, number: int) -> Dict[str, str]:
-  rule1 = re.sub(r"\s+", " ", rule)
-  rule2 = rule1.split(" ")
+  tokens = rule.split(" ")
 
-  rule3 = {rule2[idx]: rule2[idx + 1] for idx in range(0, len(rule2), 2)}
-  # TODO split port to source_port dest_port
-  # TODO what about nuber of the ACL, if it breaks just type "deleted" in the line and skip the rule
+  data = {tokens[idx]: tokens[idx + 1] for idx in range(0, len(tokens), 2)}
 
-  rule3["id"] = xxhash.xxh32(rule1).hexdigest()
-  rule3["number"] = number
-  return rule3
+  if data["from"] == "any":
+    data["from"] = "0.0.0.0/0"
+
+  if data["to"] == "any":
+    data["to"] = "0.0.0.0/0"
+
+  if re.search(r":", data["port"]):
+    (src_port, dest_port) = data["port"].split(":")
+
+    data["src_port"] = src_port
+    data["dest_port"] = dest_port
+
+  else:
+    data["src_port"] = data["port"]
+    data["dest_port"] = data["port"]
+
+  del data["port"]
+
+  data["number"] = number
+  data["id"] = xxhash.xxh32(rule).hexdigest()
+
+  return data
 
 
 def parse_nacl_rules(rules: List[str], start_number: int = 100) -> List[Dict[str, str]]:
@@ -33,7 +50,11 @@ def parse_nacl_rules(rules: List[str], start_number: int = 100) -> List[Dict[str
   data = []
 
   for rule in rules:
-    data.append(parse_nacl_rule(rule, number))
+    rule = re.sub(r"\s+", " ", rule)
+
+    if not rule == "deleted":
+      data.append(parse_nacl_rule(rule, number))
+
     number += 1
 
   return data
@@ -60,8 +81,13 @@ def main():
     inventory["nacl"][nacl]["ingress"] = ingress
     inventory["nacl"][nacl]["egress"] = egress
 
-  # print(json.dumps(inventory))
-  print(render_template(inventory))
+  with open("generated.json", "w") as fh:
+    print("writing generated.json")
+    fh.write(json.dumps(inventory, indent=2, sort_keys=True))
+
+  with open("generated.tf", "w") as fh:
+    print("writing generated.tf")
+    fh.write(render_template(inventory))
 
 
 main()
