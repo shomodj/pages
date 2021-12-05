@@ -15,20 +15,28 @@ def get_inventory() -> Dict[str, Any]:
   return json.loads(data)
 
 
-def parse_nacl_rule(rule: str) -> Dict[str, str]:
+def parse_nacl_rule(rule: str, number: int) -> Dict[str, str]:
   rule1 = re.sub(r"\s+", " ", rule)
   rule2 = rule1.split(" ")
 
   rule3 = {rule2[idx]: rule2[idx + 1] for idx in range(0, len(rule2), 2)}
   # TODO split port to source_port dest_port
-  # TODO what about nuber of the ACL
+  # TODO what about nuber of the ACL, if it breaks just type "deleted" in the line and skip the rule
 
   rule3["id"] = xxhash.xxh32(rule1).hexdigest()
+  rule3["number"] = number
   return rule3
 
 
-def parse_nacl_rules(rules: List[str]) -> List[Dict[str, str]]:
-  return [parse_nacl_rule(rule) for rule in rules]
+def parse_nacl_rules(rules: List[str], start_number: int = 100) -> List[Dict[str, str]]:
+  number = start_number
+  data = []
+
+  for rule in rules:
+    data.append(parse_nacl_rule(rule, number))
+    number += 1
+
+  return data
 
 
 def render_template(inventory: Dict[str, Any]) -> str:
