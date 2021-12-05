@@ -3,7 +3,7 @@
 
 == Blogs
 
-* link:./blog/001-generating-terraform-code/[Generating terraform code]
+* 5/12/2021 | link:./blog/001-generating-terraform-code/[Generating terraform code]
 
 == Links
 
