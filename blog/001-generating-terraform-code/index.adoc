@@ -1,22 +1,99 @@
-
 = Generating terraform code
 
-== Using count
+== Why would you generate terraform code?
 
-* https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html
-* https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl
-* https://en.wikipedia.org/wiki/Ephemeral_port
-* https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-byoip.html
-* https://docs.gruntwork.io/guides/upgrading-to-tf12-tg19/
+Well as you start to get more experienced with terraform you wonder if there is a more efficient way to write it.
+In this blog post I will try and explain my journey towards generating terraform code and my frustrations with HCL.
 
-NOTE: these ideas were initially written to solve problems with terraform version 0.11 which uses HCL1 syntaxt, newer versions of terraform use HCL2 which has much more powerfull syntaxt but the problem is the same
+NOTE: these ideas were initially written to solve problems with terraform version 0.11 which uses HCL v1 syntax, newer versions of terraform use HCL v2 which has much more powerful syntax but the problem is still the same
 
-Major problem here is the removing one line in the list will trigger delete and create on all the elements below that element.
+== Using terraform to generate terraform
 
-Lets run `terraform apply`, showing only two rules from ingress and egress
+So I was writing a lot of network ACL rules one day and I though what if I could use Ubuntu UFW rules and turn them into terraform code?
+
+So something like this:
 
 ----
- # aws_network_acl_rule.bastion_in[0] will be created
+allow from 1.1.1.1/32 to any port 22 proto tcp
+----
+
+to become this:
+
+[source,hcl-terraform]
+----
+resource aws_network_acl_rule bastion-ingress-45b22073 {
+  network_acl_id = aws_network_acl.bastion.id
+  egress         = false
+
+  rule_number = "101"
+  protocol    = "tcp"
+  from_port   = "22"
+  to_port     = "22"
+  cidr_block  = "1.1.1.1/32"
+  rule_action = "allow"
+}
+----
+
+Pretty cool, right?
+But how would I do this?
+Now luckily for me UFW firewall rules are easily parsable as they are `key value` formatted.
+
+The only way to do it, as many other examples at that time, is to abuse `count` and use a lot of functions to extract the data.
+
+I'm not proud of this code, but it works.
+
+[source,hcl-terraform]
+----
+resource "aws_network_acl_rule" "bastion_in" {
+  count          = length(local.bastion_in)
+  network_acl_id = aws_network_acl.bastion.id
+  egress         = false
+  rule_number    = 100 + count.index + 1
+
+  protocol   = element(split(" ", replace(trimspace(element(local.bastion_in, count.index)), "\\s+", "\\s", ), ), index(split(" ", replace(trimspace(element(local.bastion_in, count.index)), "\\s+", "\\s", ), ), "proto", ) + 1, )
+  from_port  = element(split(":", element(split(" ", replace(trimspace(element(local.bastion_in, count.index)), "\\s+", "\\s", ), ), index(split(" ", replace(trimspace(element(local.bastion_in, count.index)), "\\s+", "\\s", ), ), "port", ) + 1, ), ), 0, )
+  to_port    = element(split(":", element(split(" ", replace(trimspace(element(local.bastion_in, count.index)), "\\s+", "\\s", ), ), index(split(" ", replace(trimspace(element(local.bastion_in, count.index)), "\\s+", "\\s", ), ), "port", ) + 1, ), ), 1, )
+  cidr_block = element(split(" ", replace(trimspace(element(local.bastion_in, count.index)), "\\s+", "\\s", ), ), index(split(" ", replace(trimspace(element(local.bastion_in, count.index)), "\\s+", "\\s", ), ), "from", ) + 1, )
+
+  rule_action = "allow"
+}
+----
+
+Same thing is written for egress.
+
+So now only thing left for me was to define the rules like this:
+
+[source,hcl-terraform]
+----
+locals {
+  public_ip = "188.252.196.255/32"
+  subnet_a  = "172.31.16.0/20"
+  subnet_b  = "172.31.0.0/20"
+  subnet_c  = "172.31.32.0/20"
+
+  bastion_in = [
+    "from ${local.public_ip} to any port 22 proto tcp",
+    "from ${local.subnet_a}  to any port 1024:65535 proto tcp",
+    "from ${local.subnet_a}  to any port 1024:65535 proto tcp",
+    "from ${local.subnet_b}  to any port 1024:65535 proto tcp",
+  ]
+
+  bastion_out = [
+    "from any to ${local.public_ip} port 1024:65535 proto tcp",
+    "from any to ${local.subnet_a}  port 22 proto tcp",
+    "from any to ${local.subnet_b}  port 22 proto tcp",
+    "from any to ${local.subnet_c}  port 22 proto tcp",
+  ]
+}
+----
+
+And terraform will then try to do this on `apply`:
+
+[source]
+----
+...
+
+  # aws_network_acl_rule.bastion_in[0] will be created
   + resource "aws_network_acl_rule" "bastion_in" {
       + cidr_block     = "188.252.196.255/32"
       + egress         = false
@@ -41,6 +118,8 @@ Lets run `terraform apply`, showing only two rules from ingress and egress
       + rule_number    = 102
       + to_port        = 65535
     }
+
+...
 
   # aws_network_acl_rule.bastion_out[0] will be created
   + resource "aws_network_acl_rule" "bastion_out" {
@@ -67,47 +146,205 @@ Lets run `terraform apply`, showing only two rules from ingress and egress
       + rule_number    = 102
       + to_port        = 22
     }
+
+...
+
+Plan: 10 to add, 0 to change, 0 to destroy.
 ----
 
-So we generated `aws_network_acl_rule` resources from this:
+This is awesome, granted generator code is ugly, but now I could define network ACLs in one central location, and it was much more readable and manageable.
 
+== Using python to generate terraform code
+
+So when the code got audited by security, they were lost a bit on what was going with the network ACL generator, but they generally liked the idea of UFW rules, just not the dynamic part.
+
+Then it hit me, what if I generate pure static terraform code from Python?
+Then they would be able to follow it easily and if generated code was stored in git repository it would be much easier to diff it and approve it.
+
+I wanted to define an inventory like, if you will, data and feed it into python templates to generate terraform code.
+At that time I just discovered https://cuelang.org[CUE].
+CUE is a bit hard to explain, lets just say it's a tears json with validation and interpolation.
+
+Maybe it's better to show and example:
+
+.inventory.cue
+[source,cue]
 ----
-"from ${local.public_ip} to any port 22 proto tcp",
-"from ${local.subnet_a}  to any port 1024:65535 proto tcp",
+vars: {
+	public_ip: "188.252.196.255/32"
+	subnet_a:  "172.31.16.0/20"
+	subnet_b:  "172.31.0.0/20"
+	subnet_c:  "172.31.32.0/20"
+}
+
+nacl: bastion: ingress: [
+	"from \(vars.public_ip) to any port 22 proto tcp",
+	"from \(vars.subnet_a)  to any port 1024:65535 proto tcp",
+	"deleted",
+	"from \(vars.subnet_b)  to any port 1024:65535 proto tcp",
+	"from \(vars.subnet_c)  to any port 1024:65535 proto tcp",
+]
+
+nacl: bastion: egress: [
+	"from any to \(vars.public_ip) port 1024:65535 proto tcp",
+	"deleted",
+	"from any to \(vars.subnet_a)  port 22 proto tcp",
+	"from any to \(vars.subnet_b)  port 22 proto tcp",
+	"from any to \(vars.subnet_c)  port 22 proto tcp",
+]
 ----
 
-The concept is nice, but code is not. Granted this was written for 0.11 version, it is probally little bit cleaner in 0.12+ versions but the same fundamental problem still persists and that is that `count` is evil. Why? Because removing one UFW rule in the middle of the list will trigger a delete/create on the rest of the list.
+When running `cue export inventory.cue` you will get this:
 
-== Using templating
-
-=== Cue
-
-* https://github.com/dbohdan/structured-text-tools
-
-=== Gomplate
-
-* https://docs.gomplate.ca
-
-This is where a "proper" templating comes in :)
-
-My next idea was to use json/yaml inventory file and fead it to jinja templates to generate terraform code. So instead of using count I would generate seperate unique resources.
-
-[source, hcl]
+[source,json]
 ----
-aws_network_acl_rule "bastion_in" {
-    count = ...
+{
+  "vars": {
+    "public_ip": "188.252.196.255/32",
+    "subnet_a": "172.31.16.0/20",
+    "subnet_b": "172.31.0.0/20",
+    "subnet_c": "172.31.32.0/20"
+  },
+  "nacl": {
+    "bastion": {
+      "ingress": [
+        "from 188.252.196.255/32 to any port 22 proto tcp",
+        "from 172.31.16.0/20  to any port 1024:65535 proto tcp",
+        "from 172.31.0.0/20  to any port 1024:65535 proto tcp",
+        "from 172.31.32.0/20  to any port 1024:65535 proto tcp"
+      ],
+      "egress": [
+        "from any to 188.252.196.255/32 port 1024:65535 proto tcp",
+        "from any to 172.31.16.0/20  port 22 proto tcp",
+        "from any to 172.31.0.0/20  port 22 proto tcp",
+        "from any to 172.31.32.0/20  port 22 proto tcp"
+      ]
+    }
+  }
 }
 ----
 
-[source, jinja]
-----
-{% for rule in inventory.bastion_in %}
+Remember the ugly code in terraform that parses UFW rule, here it is in python:
 
-aws_network_acl_rule "bastion_in-{{  }}" {
-    count = ...
+[source,python]
+----
+def parse_nacl_rule(rule: str, number: int) -> Dict[str, str]:
+    tokens = rule.split(" ")
+
+    data = {tokens[idx]: tokens[idx + 1] for idx in range(0, len(tokens), 2)}
+
+    if data["from"] == "any":
+        data["from"] = "0.0.0.0/0"
+
+    if data["to"] == "any":
+        data["to"] = "0.0.0.0/0"
+
+    if re.search(r":", data["port"]):
+        (src_port, dest_port) = data["port"].split(":")
+
+        data["src_port"] = src_port
+        data["dest_port"] = dest_port
+
+    else:
+        data["src_port"] = data["port"]
+        data["dest_port"] = data["port"]
+
+    del data["port"]
+
+    data["number"] = number
+    data["id"] = xxhash.xxh32(rule).hexdigest()
+
+    return data
+----
+
+Much more readable.
+
+So lets now have a look at templating, I'm using here Jinja2 templating engine.
+
+[source]
+----
+{% for name in nacl %}
+resource aws_network_acl {{ name }} {
+  vpc_id = aws_default_vpc.main.id
 }
 
+{% for rule in nacl[name].ingress %}
+resource aws_network_acl_rule bastion-ingress-{{ rule.id }} {
+  network_acl_id = aws_network_acl.{{ name }}.id
+  egress         = false
+
+  rule_number = "{{ rule.number }}"
+  protocol    = "{{ rule.proto }}"
+  from_port   = "{{ rule.src_port }}"
+  to_port     = "{{ rule.dest_port }}"
+  cidr_block  = "{{ rule.from }}"
+  rule_action = "allow"
+}
 {% endfor %}
 ----
 
-== JSON
+And this is the result:
+
+[source,hcl-terraform]
+----
+resource aws_network_acl_rule bastion-ingress-0edef661 {
+  network_acl_id = aws_network_acl.bastion.id
+  egress         = false
+
+  rule_number = "100"
+  protocol    = "tcp"
+  from_port   = "22"
+  to_port     = "22"
+  cidr_block  = "188.252.196.255/32"
+  rule_action = "allow"
+}
+
+resource aws_network_acl_rule bastion-ingress-b9d232bf {
+  network_acl_id = aws_network_acl.bastion.id
+  egress         = false
+
+  rule_number = "101"
+  protocol    = "tcp"
+  from_port   = "1024"
+  to_port     = "65535"
+  cidr_block  = "172.31.16.0/20"
+  rule_action = "allow"
+}
+
+// ...
+
+resource aws_network_acl_rule bastion-egress-a21a89f4 {
+  network_acl_id = aws_network_acl.bastion.id
+  egress         = true
+
+  rule_number = "100"
+  protocol    = "tcp"
+  from_port   = "1024"
+  to_port     = "65535"
+  cidr_block  = "188.252.196.255/32"
+  rule_action = "allow"
+}
+
+resource aws_network_acl_rule bastion-egress-cf1956c3 {
+  network_acl_id = aws_network_acl.bastion.id
+  egress         = true
+
+  rule_number = "102"
+  protocol    = "tcp"
+  from_port   = "22"
+  to_port     = "22"
+  cidr_block  = "172.31.16.0/20"
+  rule_action = "allow"
+}
+
+// ...
+----
+
+Now this is something that anyone can read easily and change easily.
+
+== Conclusion
+
+I really like terraform drivers and the engine, but I don't like the HCL, when you reach a certain level of complexity it starts to slow you down.
+Generating code has its pros and cons, it's not a perfect solution, and it's probably not for everyone, but it helped me tackle some big enterprise deployments.
+
+You can browse the source code https://codeberg.org/shomodj/pages/src/branch/main/blog/001-generating-terraform-code[here]

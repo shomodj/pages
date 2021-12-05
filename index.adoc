@@ -1,0 +1,10 @@
+
+= Shomodj pages
+
+== Blogs
+
+* link:./blog/001-generating-terraform-code/[Generating terraform code]
+
+== Links
+
+* link:./cv/[my CV]
