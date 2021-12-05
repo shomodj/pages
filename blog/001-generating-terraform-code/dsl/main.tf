@@ -11,6 +11,7 @@ locals {
     "from ${local.subnet_a}  to any port 1024:65535 proto tcp",
     "from ${local.subnet_b}  to any port 1024:65535 proto tcp",
   ]
+
   bastion_out = [
     "from any to ${local.public_ip} port 1024:65535 proto tcp",
     "from any to ${local.subnet_a}  port 22 proto tcp",

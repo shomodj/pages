@@ -1,7 +1,7 @@
 
 = Generating terraform code
 
-== DSL in DSL
+== Using count
 
 * https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html
 * https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl
@@ -78,9 +78,17 @@ So we generated `aws_network_acl_rule` resources from this:
 
 The concept is nice, but code is not. Granted this was written for 0.11 version, it is probally little bit cleaner in 0.12+ versions but the same fundamental problem still persists and that is that `count` is evil. Why? Because removing one UFW rule in the middle of the list will trigger a delete/create on the rest of the list.
 
-== Jinja
+== Using templating
 
-This is where a "proper" templating comes in :) 
+=== Cue
+
+* https://github.com/dbohdan/structured-text-tools
+
+=== Gomplate
+
+* https://docs.gomplate.ca
+
+This is where a "proper" templating comes in :)
 
 My next idea was to use json/yaml inventory file and fead it to jinja templates to generate terraform code. So instead of using count I would generate seperate unique resources.
 

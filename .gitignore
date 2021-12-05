@@ -1,4 +1,8 @@
+/.idea
 /.task
+/.venv
+
+*.pyc
 
 .terraform*
 terraform.tfstate*

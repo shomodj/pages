@@ -15,7 +15,17 @@ tasks:
   lfs:
     desc: install git lfs
     cmds:
-    - yay -S git-lfs
-    - git lfs install
-    - git lfs track "*.pdf"
-    - git add .gitattribute
+      - yay -S git-lfs
+      - git lfs install
+      - git lfs track "*.pdf"
+      - git add .gitattribute
+
+  venv:
+    desc: create venv
+    cmds:
+      - python -mvenv .venv
+
+  reqs:
+    desc: install requirements
+    cmds:
+      - .venv/bin/pip install -r requirements.txt
