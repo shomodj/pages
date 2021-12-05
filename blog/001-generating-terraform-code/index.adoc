@@ -1,3 +1,8 @@
+:source-highlighter: rouge
+:rouge-style: monokai
+
+:toc:
+
 = Generating terraform code
 
 == Why would you generate terraform code?
@@ -7,12 +12,13 @@ In this blog post I will try and explain my journey towards generating terraform
 
 NOTE: these ideas were initially written to solve problems with terraform version 0.11 which uses HCL v1 syntax, newer versions of terraform use HCL v2 which has much more powerful syntax but the problem is still the same
 
-== Using terraform to generate terraform
+== Using terraform
 
 So I was writing a lot of network ACL rules one day and I though what if I could use Ubuntu UFW rules and turn them into terraform code?
 
 So something like this:
 
+[source]
 ----
 allow from 1.1.1.1/32 to any port 22 proto tcp
 ----
@@ -154,7 +160,7 @@ Plan: 10 to add, 0 to change, 0 to destroy.
 
 This is awesome, granted generator code is ugly, but now I could define network ACLs in one central location, and it was much more readable and manageable.
 
-== Using python to generate terraform code
+== Using python
 
 So when the code got audited by security, they were lost a bit on what was going with the network ACL generator, but they generally liked the idea of UFW rules, just not the dynamic part.
 

@@ -436,10 +436,235 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .cm {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .c1 {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .cp {
+  color: #75715e;
+  font-weight: bold;
+}
+pre.rouge .cs {
+  color: #75715e;
+  font-weight: bold;
+  font-style: italic;
+}
+pre.rouge .err {
+  color: #960050;
+  background-color: #1e0010;
+}
+pre.rouge .gi {
+  color: #ffffff;
+  background-color: #324932;
+}
+pre.rouge .gd {
+  color: #ffffff;
+  background-color: #493131;
+}
+pre.rouge .ge {
+  color: #000000;
+  font-style: italic;
+}
+pre.rouge .gr {
+  color: #aa0000;
+}
+pre.rouge .gt {
+  color: #aa0000;
+}
+pre.rouge .gh {
+  color: #999999;
+}
+pre.rouge .go {
+  color: #888888;
+}
+pre.rouge .gp {
+  color: #555555;
+}
+pre.rouge .gs {
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #aaaaaa;
+}
+pre.rouge .k, pre.rouge .kv {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kc {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kd {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kp {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kr {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kt {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kn {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .ow {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .o {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .mf {
+  color: #ae81ff;
+}
+pre.rouge .mh {
+  color: #ae81ff;
+}
+pre.rouge .il {
+  color: #ae81ff;
+}
+pre.rouge .mi {
+  color: #ae81ff;
+}
+pre.rouge .mo {
+  color: #ae81ff;
+}
+pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
+  color: #ae81ff;
+}
+pre.rouge .se {
+  color: #ae81ff;
+}
+pre.rouge .sa {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .sb {
+  color: #e6db74;
+}
+pre.rouge .sc {
+  color: #e6db74;
+}
+pre.rouge .sd {
+  color: #e6db74;
+}
+pre.rouge .s2 {
+  color: #e6db74;
+}
+pre.rouge .sh {
+  color: #e6db74;
+}
+pre.rouge .si {
+  color: #e6db74;
+}
+pre.rouge .sx {
+  color: #e6db74;
+}
+pre.rouge .sr {
+  color: #e6db74;
+}
+pre.rouge .s1 {
+  color: #e6db74;
+}
+pre.rouge .ss {
+  color: #e6db74;
+}
+pre.rouge .s, pre.rouge .dl {
+  color: #e6db74;
+}
+pre.rouge .na {
+  color: #a6e22e;
+}
+pre.rouge .nc {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .nd {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .ne {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .no {
+  color: #66d9ef;
+}
+pre.rouge .bp {
+  color: #f8f8f2;
+}
+pre.rouge .nb {
+  color: #f8f8f2;
+}
+pre.rouge .ni {
+  color: #f8f8f2;
+}
+pre.rouge .nn {
+  color: #f8f8f2;
+}
+pre.rouge .vc {
+  color: #f8f8f2;
+}
+pre.rouge .vg {
+  color: #f8f8f2;
+}
+pre.rouge .vi {
+  color: #f8f8f2;
+}
+pre.rouge .nv, pre.rouge .vm {
+  color: #f8f8f2;
+}
+pre.rouge .w {
+  color: #f8f8f2;
+}
+pre.rouge .nl {
+  color: #f8f8f2;
+  font-weight: bold;
+}
+pre.rouge .nt {
+  color: #f92672;
+}
+pre.rouge {
+  color: #f8f8f2;
+  background-color: #49483e;
+}
+</style>
 </head>
 <body class="article">
 <div id="header">
 <h1>Generating terraform code</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_why_would_you_generate_terraform_code">Why would you generate terraform code?</a></li>
+<li><a href="#_using_terraform">Using terraform</a></li>
+<li><a href="#_using_python">Using python</a></li>
+<li><a href="#_conclusion">Conclusion</a></li>
+</ul>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
@@ -464,7 +689,7 @@ these ideas were initially written to solve problems with terraform version 0.11
 </div>
 </div>
 <div class="sect1">
-<h2 id="_using_terraform_to_generate_terraform">Using terraform to generate terraform</h2>
+<h2 id="_using_terraform">Using terraform</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>So I was writing a lot of network ACL rules one day and I though what if I could use Ubuntu UFW rules and turn them into terraform code?</p>
@@ -474,7 +699,7 @@ these ideas were initially written to solve problems with terraform version 0.11
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>allow from 1.1.1.1/32 to any port 22 proto tcp</pre>
+<pre class="rouge highlight"><code>allow from 1.1.1.1/32 to any port 22 proto tcp</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -482,7 +707,7 @@ these ideas were initially written to solve problems with terraform version 0.11
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-hcl-terraform" data-lang="hcl-terraform">resource aws_network_acl_rule bastion-ingress-45b22073 {
+<pre class="rouge highlight"><code data-lang="hcl-terraform">resource aws_network_acl_rule bastion-ingress-45b22073 {
   network_acl_id = aws_network_acl.bastion.id
   egress         = false
 
@@ -508,7 +733,7 @@ Now luckily for me UFW firewall rules are easily parsable as they are <code>key 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-hcl-terraform" data-lang="hcl-terraform">resource "aws_network_acl_rule" "bastion_in" {
+<pre class="rouge highlight"><code data-lang="hcl-terraform">resource "aws_network_acl_rule" "bastion_in" {
   count          = length(local.bastion_in)
   network_acl_id = aws_network_acl.bastion.id
   egress         = false
@@ -531,7 +756,7 @@ Now luckily for me UFW firewall rules are easily parsable as they are <code>key 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-hcl-terraform" data-lang="hcl-terraform">locals {
+<pre class="rouge highlight"><code data-lang="hcl-terraform">locals {
   public_ip = "188.252.196.255/32"
   subnet_a  = "172.31.16.0/20"
   subnet_b  = "172.31.0.0/20"
@@ -558,7 +783,7 @@ Now luckily for me UFW firewall rules are easily parsable as they are <code>key 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>...
+<pre class="rouge highlight"><code>...
 
   # aws_network_acl_rule.bastion_in[0] will be created
   + resource "aws_network_acl_rule" "bastion_in" {
@@ -625,7 +850,7 @@ Plan: 10 to add, 0 to change, 0 to destroy.</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_using_python_to_generate_terraform_code">Using python to generate terraform code</h2>
+<h2 id="_using_python">Using python</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>So when the code got audited by security, they were lost a bit on what was going with the network ACL generator, but they generally liked the idea of UFW rules, just not the dynamic part.</p>
@@ -645,7 +870,7 @@ CUE is a bit hard to explain, lets just say it&#8217;s a tears json with validat
 <div class="listingblock">
 <div class="title">inventory.cue</div>
 <div class="content">
-<pre class="highlight"><code class="language-cue" data-lang="cue">vars: {
+<pre class="rouge highlight"><code data-lang="cue">vars: {
 	public_ip: "188.252.196.255/32"
 	subnet_a:  "172.31.16.0/20"
 	subnet_b:  "172.31.0.0/20"
@@ -674,30 +899,30 @@ nacl: bastion: egress: [
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "vars": {
-    "public_ip": "188.252.196.255/32",
-    "subnet_a": "172.31.16.0/20",
-    "subnet_b": "172.31.0.0/20",
-    "subnet_c": "172.31.32.0/20"
-  },
-  "nacl": {
-    "bastion": {
-      "ingress": [
-        "from 188.252.196.255/32 to any port 22 proto tcp",
-        "from 172.31.16.0/20  to any port 1024:65535 proto tcp",
-        "from 172.31.0.0/20  to any port 1024:65535 proto tcp",
-        "from 172.31.32.0/20  to any port 1024:65535 proto tcp"
-      ],
-      "egress": [
-        "from any to 188.252.196.255/32 port 1024:65535 proto tcp",
-        "from any to 172.31.16.0/20  port 22 proto tcp",
-        "from any to 172.31.0.0/20  port 22 proto tcp",
-        "from any to 172.31.32.0/20  port 22 proto tcp"
-      ]
-    }
-  }
-}</code></pre>
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nl">"vars"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"public_ip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"188.252.196.255/32"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"subnet_a"</span><span class="p">:</span><span class="w"> </span><span class="s2">"172.31.16.0/20"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"subnet_b"</span><span class="p">:</span><span class="w"> </span><span class="s2">"172.31.0.0/20"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"subnet_c"</span><span class="p">:</span><span class="w"> </span><span class="s2">"172.31.32.0/20"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"nacl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"bastion"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"ingress"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"from 188.252.196.255/32 to any port 22 proto tcp"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"from 172.31.16.0/20  to any port 1024:65535 proto tcp"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"from 172.31.0.0/20  to any port 1024:65535 proto tcp"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"from 172.31.32.0/20  to any port 1024:65535 proto tcp"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"egress"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"from any to 188.252.196.255/32 port 1024:65535 proto tcp"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"from any to 172.31.16.0/20  port 22 proto tcp"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"from any to 172.31.0.0/20  port 22 proto tcp"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"from any to 172.31.32.0/20  port 22 proto tcp"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -705,33 +930,33 @@ nacl: bastion: egress: [
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-python" data-lang="python">def parse_nacl_rule(rule: str, number: int) -&gt; Dict[str, str]:
-    tokens = rule.split(" ")
+<pre class="rouge highlight"><code data-lang="python"><span class="k">def</span> <span class="nf">parse_nacl_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">rule</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)</span>
 
-    data = {tokens[idx]: tokens[idx + 1] for idx in range(0, len(tokens), 2)}
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">tokens</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span> <span class="n">tokens</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">),</span> <span class="mi">2</span><span class="p">)}</span>
 
-    if data["from"] == "any":
-        data["from"] = "0.0.0.0/0"
+    <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s">"from"</span><span class="p">]</span> <span class="o">==</span> <span class="s">"any"</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s">"from"</span><span class="p">]</span> <span class="o">=</span> <span class="s">"0.0.0.0/0"</span>
 
-    if data["to"] == "any":
-        data["to"] = "0.0.0.0/0"
+    <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s">"to"</span><span class="p">]</span> <span class="o">==</span> <span class="s">"any"</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s">"to"</span><span class="p">]</span> <span class="o">=</span> <span class="s">"0.0.0.0/0"</span>
 
-    if re.search(r":", data["port"]):
-        (src_port, dest_port) = data["port"].split(":")
+    <span class="k">if</span> <span class="n">re</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s">":"</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">"port"</span><span class="p">]):</span>
+        <span class="p">(</span><span class="n">src_port</span><span class="p">,</span> <span class="n">dest_port</span><span class="p">)</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">"port"</span><span class="p">].</span><span class="n">split</span><span class="p">(</span><span class="s">":"</span><span class="p">)</span>
 
-        data["src_port"] = src_port
-        data["dest_port"] = dest_port
+        <span class="n">data</span><span class="p">[</span><span class="s">"src_port"</span><span class="p">]</span> <span class="o">=</span> <span class="n">src_port</span>
+        <span class="n">data</span><span class="p">[</span><span class="s">"dest_port"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dest_port</span>
 
-    else:
-        data["src_port"] = data["port"]
-        data["dest_port"] = data["port"]
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s">"src_port"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">"port"</span><span class="p">]</span>
+        <span class="n">data</span><span class="p">[</span><span class="s">"dest_port"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">"port"</span><span class="p">]</span>
 
-    del data["port"]
+    <span class="k">del</span> <span class="n">data</span><span class="p">[</span><span class="s">"port"</span><span class="p">]</span>
 
-    data["number"] = number
-    data["id"] = xxhash.xxh32(rule).hexdigest()
+    <span class="n">data</span><span class="p">[</span><span class="s">"number"</span><span class="p">]</span> <span class="o">=</span> <span class="n">number</span>
+    <span class="n">data</span><span class="p">[</span><span class="s">"id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xxhash</span><span class="p">.</span><span class="n">xxh32</span><span class="p">(</span><span class="n">rule</span><span class="p">).</span><span class="n">hexdigest</span><span class="p">()</span>
 
-    return data</code></pre>
+    <span class="k">return</span> <span class="n">data</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -742,7 +967,7 @@ nacl: bastion: egress: [
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>{% for name in nacl %}
+<pre class="rouge highlight"><code>{% for name in nacl %}
 resource aws_network_acl {{ name }} {
   vpc_id = aws_default_vpc.main.id
 }
@@ -767,7 +992,7 @@ resource aws_network_acl_rule bastion-ingress-{{ rule.id }} {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-hcl-terraform" data-lang="hcl-terraform">resource aws_network_acl_rule bastion-ingress-0edef661 {
+<pre class="rouge highlight"><code data-lang="hcl-terraform">resource aws_network_acl_rule bastion-ingress-0edef661 {
   network_acl_id = aws_network_acl.bastion.id
   egress         = false
 
@@ -840,7 +1065,7 @@ Generating code has its pros and cons, it&#8217;s not a perfect solution, and it
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-12-05 23:37:15 +0100
+Last updated 2021-12-05 23:46:47 +0100
 </div>
 </div>
 </body>
