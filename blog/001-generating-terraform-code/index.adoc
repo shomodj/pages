@@ -169,7 +169,7 @@ Then they would be able to follow it easily and if generated code was stored in 
 
 I wanted to define an inventory like, if you will, data and feed it into python templates to generate terraform code.
 At that time I just discovered https://cuelang.org[CUE].
-CUE is a bit hard to explain, lets just say it's a tears json with validation and interpolation.
+CUE is a bit hard to explain, lets just say it's similar to HCL but with schema.
 
 Maybe it's better to show and example:
 
