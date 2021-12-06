@@ -234,6 +234,9 @@ Remember the ugly code in terraform that parses UFW rule, here it is in python:
 
 [source,python]
 ----
+from typing import Dict
+import re, xxhash
+
 def parse_nacl_rule(rule: str, number: int) -> Dict[str, str]:
     tokens = rule.split(" ")
 
@@ -286,6 +289,22 @@ resource aws_network_acl_rule bastion-ingress-{{ rule.id }} {
   cidr_block  = "{{ rule.from }}"
   rule_action = "allow"
 }
+{% endfor %}
+
+{% for rule in nacl[name].egress %}
+resource aws_network_acl_rule bastion-egress-{{ rule.id }} {
+  network_acl_id = aws_network_acl.{{ name }}.id
+  egress         = true
+
+  rule_number = "{{ rule.number }}"
+  protocol    = "{{ rule.proto }}"
+  from_port   = "{{ rule.src_port }}"
+  to_port     = "{{ rule.dest_port }}"
+  cidr_block  = "{{ rule.to }}"
+  rule_action = "allow"
+}
+{% endfor %}
+
 {% endfor %}
 ----
 

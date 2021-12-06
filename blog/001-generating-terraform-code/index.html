@@ -930,7 +930,10 @@ nacl: bastion: egress: [
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="python"><span class="k">def</span> <span class="nf">parse_nacl_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">re</span><span class="p">,</span> <span class="n">xxhash</span>
+
+<span class="k">def</span> <span class="nf">parse_nacl_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="n">tokens</span> <span class="o">=</span> <span class="n">rule</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">tokens</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span> <span class="n">tokens</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">),</span> <span class="mi">2</span><span class="p">)}</span>
@@ -984,6 +987,22 @@ resource aws_network_acl_rule bastion-ingress-{{ rule.id }} {
   cidr_block  = "{{ rule.from }}"
   rule_action = "allow"
 }
+{% endfor %}
+
+{% for rule in nacl[name].egress %}
+resource aws_network_acl_rule bastion-egress-{{ rule.id }} {
+  network_acl_id = aws_network_acl.{{ name }}.id
+  egress         = true
+
+  rule_number = "{{ rule.number }}"
+  protocol    = "{{ rule.proto }}"
+  from_port   = "{{ rule.src_port }}"
+  to_port     = "{{ rule.dest_port }}"
+  cidr_block  = "{{ rule.to }}"
+  rule_action = "allow"
+}
+{% endfor %}
+
 {% endfor %}</code></pre>
 </div>
 </div>
@@ -1065,7 +1084,7 @@ Generating code has its pros and cons, it&#8217;s not a perfect solution, and it
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-12-05 23:46:47 +0100
+Last updated 2021-12-06 11:02:25 +0100
 </div>
 </div>
 </body>
