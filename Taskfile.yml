@@ -30,7 +30,8 @@ tasks:
     cmds:
       - .venv/bin/pip install -r requirements.txt
 
-  publish:
-    desc: publish to github
+  push:
+    desc: git push for all remotes
     cmds:
+      - git push origin
       - git push github
