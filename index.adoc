@@ -1,5 +1,5 @@
 
-= Shomodj pages
+= Boris Somodvarac pages
 
 == Blogs
 
@@ -7,4 +7,7 @@
 
 == Links
 
-* link:./cv/[my CV]
+* link:./cv/[my resume]
+* https://www.linkedin.com/in/boris-somodvarac/[linkedin profile]
+* https://cloudacademy.com/profile/198c6f91-78f4-4c8e-98fc-7b49ffad86c0/[cloudacademy profile]
+* https://cloudacademy.com/profile/198c6f91-78f4-4c8e-98fc-7b49ffad86c0/certifications/[cloudacademy certifications]
